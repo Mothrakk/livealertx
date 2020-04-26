@@ -1,8 +1,11 @@
 ![x](https://imgur.com/ggW0ElK.png)
 ## Dependencies
 [python 3.x](https://www.python.org/downloads/)
+
 [requests](https://requests.readthedocs.io/en/master/)
+
 [notify-send](https://ss64.com/bash/notify-send.html) (should be natively installed on ubuntu)
+
 leenux
 
 ## Usage
