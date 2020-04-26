@@ -2,9 +2,9 @@
 ## Dependencies
 [python 3.x](https://www.python.org/downloads/)
 
-[requests](https://requests.readthedocs.io/en/master/)
+[requests](https://requests.readthedocs.io/en/master/) (`python3 -m pip install requests`)
 
-[notify-send](https://ss64.com/bash/notify-send.html) (should be natively installed on ubuntu)
+[notify-send](https://ss64.com/bash/notify-send.html) (should be natively installed on ubuntu) (`sudo apt-get install libnotify-bin`)
 
 leenux
 
