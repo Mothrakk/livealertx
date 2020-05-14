@@ -6,16 +6,31 @@ from paths import Paths
 from typing import Union, Dict
 
 def client_id() -> str:
-    return "vdl6udd3nelaw38jh2prltfvflb5rm" # this is ok to be public
+    return "5kv34ia1mq9s51ayapg1djri2r3bge" # this is ok to be public
+
+def oauth_secret() -> str:
+    return "kswni5vi6pepy5gj9nhjh3jl7gn0fh" # this is not ok to be public but who gives a fuck
+
+def oauth_token() -> str:
+    uri = "".join((
+            "https://id.twitch.tv/oauth2/token",
+            "?client_id=" + client_id(),
+            "&client_secret=" + oauth_secret(),
+            "&grant_type=client_credentials"
+    ))
+    response = requests.post(uri)
+    if response.status_code == 200:
+        return response.json()["access_token"]
 
 def custom_headers() -> Dict[str, str]:
-    return { "Client-ID": client_id() }
+    return { "Client-ID": client_id(),
+             "Authorization": f"Bearer {oauth_token()}" }
 
 def fetch_pfp(name: str, url: str) -> None:
-    os.makedirs(Paths.PFP, exist_ok=True)
     response = requests.get(url)
-    with open(f"{Paths.PFP}/{name}.png", "wb") as fptr:
-        fptr.write(response.content)
+    if response.status_code == 200:
+        with open(f"{Paths.PFP}/{name}.png", "wb") as fptr:
+            fptr.write(response.content)
 
 def username_exists(user: str) -> Union[None, bool]:
     response = requests.get(f"https://api.twitch.tv/helix/users?login={user}", headers=custom_headers())
