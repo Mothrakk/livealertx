@@ -4,8 +4,9 @@ import os
 from paths import Paths
 from utils import username_exists
 from tracking import Tracking
+from authorization import AuthorizationManager
 
-from typing import Dict
+from typing import Union, Dict
 
 argc = len(sys.argv)
 

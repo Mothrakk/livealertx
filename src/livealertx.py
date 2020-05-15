@@ -7,8 +7,8 @@ import requests
 
 from paths import Paths
 from tracking import Tracking
-from utils import custom_headers
 from argparsing import Parser
+from authorization import AuthorizationManager
 
 def notify(name: str, title: str) -> None:
     query = ("notify-send",
@@ -23,18 +23,20 @@ def loop(TICK_RATE_SECONDS: int) -> None:
     while True:
         tracking = Tracking.get()
         if tracking:
-            query = f"https://api.twitch.tv/helix/streams?{'&'.join((f'user_login={x}' for x in tracking))}"
-            response = requests.get(query, headers=custom_headers())
-            if response.status_code == 200:
-                j = response.json()
-                if j["data"]:
-                    live_now = {
-                        dp["user_name"] : {"title": dp["title"]}
-                        for dp in j["data"]
-                    }
-                    for k in set(live_now).difference(previously_live):
-                        notify(k, live_now[k]["title"])
-                    previously_live = set(live_now)
+            custom_headers = AuthorizationManager.headers()
+            if custom_headers is not None:
+                query = f"https://api.twitch.tv/helix/streams?{'&'.join((f'user_login={x}' for x in tracking))}"
+                response = requests.get(query, headers=custom_headers)
+                if response.status_code == 200:
+                    j = response.json()
+                    if j["data"]:
+                        live_now = {
+                            dp["user_name"] : {"title": dp["title"]}
+                            for dp in j["data"]
+                        }
+                        for k in set(live_now).difference(previously_live):
+                            notify(k, live_now[k]["title"])
+                        previously_live = set(live_now)
 
         time.sleep(TICK_RATE_SECONDS)
 
